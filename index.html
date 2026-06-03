@@ -695,18 +695,38 @@ function calculate() {
     const totalDrugMg = ampsUsed * amp.mg;
     const totalDrugMcg = amp.isMcg ? ampsUsed * amp.mcgPerAmp : null;
 
-    // Pick smallest round total volume >= drugVolNum
+    const MAX_RATE = 1.5; // シリンジェクター最大速度
     const roundVols = [50, 60, 80, 100, 120];
-    const totalVol = roundVols.find(v => v >= drugVolNum) ?? Math.ceil(drugVolNum / 10) * 10;
-    const salineVol = totalVol - drugVolNum;
 
-    // Rate to deliver continuous equi mg/day at syringe concentration
-    // conc = totalDrugMg / totalVol; rate = equi / conc / 24
+    // Rate = MAX_RATE のときに必要な総量: totalVol = MAX_RATE * totalDrugMg * 24 / equi
+    const volForMaxRate = MAX_RATE * totalDrugMg * 24 / equi;
+
+    let totalVol, rateWarning;
+    if (volForMaxRate < drugVolNum) {
+      // 希釈なし（薬液量そのまま）でもMAX_RATEを超えてしまう
+      totalVol = drugVolNum;
+      rateWarning = true;
+    } else {
+      // MAX_RATE以下に収まる最小のキリよい量を選ぶ
+      // 通常通り小さい方から選ぶが、その量での速度がMAX_RATE以下かチェック
+      const candidate = roundVols.find(v => v >= drugVolNum) ?? Math.ceil(drugVolNum / 10) * 10;
+      const rateAtCandidate = Math.round((equi * candidate / (totalDrugMg * 24)) * 2) / 2;
+      if (rateAtCandidate <= MAX_RATE) {
+        totalVol = candidate;
+      } else {
+        // もっと大きい量にして速度を下げる
+        totalVol = roundVols.find(v => v <= volForMaxRate && v >= drugVolNum)
+          ?? roundVols.filter(v => v >= drugVolNum).pop()
+          ?? Math.floor(volForMaxRate / 10) * 10;
+        totalVol = Math.max(totalVol, drugVolNum);
+      }
+      rateWarning = false;
+    }
+
+    const salineVol = totalVol - drugVolNum;
     const concMg = totalDrugMg / totalVol;
     const rawRatePerH = (equi / concMg) / 24;
-    const ratePerH = Math.max(0.5, Math.round(rawRatePerH * 2) / 2); // nearest 0.5
-
-    // Duration the syringe will last
+    const ratePerH = Math.max(0.5, Math.min(MAX_RATE, Math.round(rawRatePerH * 2) / 2));
     const durationH = totalVol / ratePerH;
 
     let dailyLabel, ampLabel, drugVolLabel, concLabel;
@@ -728,7 +748,9 @@ function calculate() {
     document.getElementById('inj-drug-vol').textContent  = drugVolLabel;
     document.getElementById('inj-saline').textContent    = `計 ${totalVol} mL になるよう生食 ${fmt(salineVol,1)} mL を加える`;
     document.getElementById('inj-conc').textContent      = concLabel;
-    document.getElementById('inj-rate').textContent      = `${fmt(ratePerH,1)} mL/h（持続皮下/静脈内）→ 約${fmt(durationH,0)}時間分`;
+    document.getElementById('inj-rate').textContent = rateWarning
+      ? `⚠️ ${fmt(ratePerH,1)} mL/h 超（MAX ${MAX_RATE} mL/h 超過 — 希釈量の再検討が必要）`
+      : `${fmt(ratePerH,1)} mL/h（持続皮下/静脈内）→ 約${fmt(durationH,0)}時間分`;
   } else {
     injSection.style.display = 'none';
   }
