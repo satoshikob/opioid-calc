@@ -315,9 +315,56 @@
   }
   .ref-link:hover { text-decoration: underline; }
 
+  /* Equivalence diagram */
+  .eq-diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 4px 6px;
+    align-items: center;
+    justify-items: stretch;
+    font-size: 0.75rem;
+  }
+  .eq-box {
+    color: white;
+    border-radius: 7px;
+    padding: 8px 6px;
+    text-align: center;
+    line-height: 1.4;
+    display: flex; flex-direction: column; gap: 2px; align-items: center; justify-content: center;
+    min-height: 70px;
+  }
+  .eq-box span { font-size: 0.72rem; opacity: 0.92; }
+  .eq-box small { font-size: 0.64rem; opacity: 0.85; }
+  .eq-box strong { font-size: 0.88rem; font-weight: 700; }
+  .eq-box.green  { background: #27ae60; }
+  .eq-box.blue   { background: #2e86c1; }
+  .eq-box.red    { background: #c0392b; }
+  .eq-box.orange { background: #d35400; }
+  .eq-box.purple { background: #7d3c98; }
+  .eq-box.center-box {
+    background: white;
+    color: #1a5276;
+    border: 2.5px solid #1a5276;
+    font-weight: 700;
+  }
+  .eq-box.center-box span { color: #2e86c1; opacity: 1; }
+  .eq-box.center-box strong { font-size: 1rem; }
+  .eq-sym {
+    font-size: 1rem; font-weight: 700; color: #555;
+    text-align: center; padding: 0 2px;
+  }
+  .eq-sym-v {
+    font-size: 1rem; font-weight: 700; color: #555;
+    text-align: center; grid-column: span 1;
+    line-height: 1;
+  }
+
   @media (max-width: 480px) {
     .form-grid { grid-template-columns: 1fr; }
     header h1 { font-size: 1.1rem; }
+    .eq-box { min-height: 60px; padding: 6px 4px; }
+    .eq-box strong { font-size: 0.78rem; }
   }
 </style>
 </head>
@@ -570,6 +617,42 @@
       <div class="conv-note">
         ※ フェンタニル貼付剤については添付文書の換算表を参照。12.5 μg/h に相当する。<br>
         出典：文献2（がん診療ガイドライン｜がん疼痛薬物療法）
+      </div>
+
+      <!-- Visual diagram -->
+      <div style="margin-top:16px;">
+        <div style="font-size:0.76rem; color:var(--muted); margin-bottom:10px;">等価換算図（モルヒネ経口薬 30mg/日 を中心として）</div>
+        <div class="eq-diagram">
+          <!-- Row 1 -->
+          <div class="eq-box green"><span>オキシコドン<br>注射液</span><strong>15mg/日</strong></div>
+          <div class="eq-sym">≒</div>
+          <div class="eq-box blue"><span>モルヒネ<br>注射液</span><strong>15mg/日</strong></div>
+          <div class="eq-sym">≒</div>
+          <div class="eq-box red"><span>フェンタニル<br>注射液</span><strong>0.3mg/日</strong></div>
+          <!-- Row connectors -->
+          <div class="eq-sym-v">≒</div>
+          <div class="eq-sym-v">‖</div>
+          <div class="eq-sym-v">≒</div>
+          <!-- Row 2 -->
+          <div class="eq-box green"><span>オキシコドン<br>経口薬</span><strong>20mg/日</strong></div>
+          <div class="eq-sym">=</div>
+          <div class="eq-box center-box"><span>モルヒネ<br>経口薬</span><strong>30mg/日</strong></div>
+          <div class="eq-sym">=</div>
+          <div class="eq-box red"><span>フェントス®テープ<br><small>=ワンデュロ® 0.84mg<br>=デュロテップ®MT 2.1mg</small></span><strong>1mg/日</strong></div>
+          <!-- Row connectors -->
+          <div class="eq-sym-v">≒</div>
+          <div class="eq-sym-v">‖</div>
+          <div class="eq-sym-v">≒</div>
+          <!-- Row 3 -->
+          <div class="eq-box orange"><span>タペンタドール<br>経口薬</span><strong>100mg/日</strong></div>
+          <div class="eq-sym">≒</div>
+          <div class="eq-box purple"><span>トラマドール<br>経口薬</span><strong>150mg/日</strong></div>
+          <div class="eq-sym">≒</div>
+          <div class="eq-box red"><span>ヒドロモルフォン<br>経口薬 6mg/日<br>注射薬 1.2mg/日</span></div>
+        </div>
+        <div style="font-size:0.76rem; color:var(--muted); margin-top:10px; text-align:center;">
+          目安：低用量 = 0〜60mg/day　中等量 = 60〜120mg/day　高用量 = 120mg/day〜
+        </div>
       </div>
     </div>
   </div>
