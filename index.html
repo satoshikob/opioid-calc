@@ -354,7 +354,8 @@
             <option value="morphine-supp">モルヒネ（坐薬）</option>
           </optgroup>
           <optgroup label="貼付剤">
-            <option value="fentanyl-patch">フェンタニル（貼付）</option>
+            <option value="fentanyl-patch-1d">フェンタニル（貼付・1日毎）</option>
+            <option value="fentanyl-patch-3d">フェンタニル（貼付・3日毎）</option>
           </optgroup>
           <optgroup label="注射剤">
             <option value="morphine-inj">モルヒネ（注射）</option>
@@ -369,6 +370,10 @@
         <input type="number" id="from-dose" min="0" step="0.1" placeholder="0">
         <div class="unit-hint" id="from-unit-hint">mg/日</div>
       </div>
+    </div>
+    <div class="unit-hint" id="from-patch-hint" style="display:none; margin-top:8px; background:#eaf4fb; border-radius:6px; padding:8px 12px; font-size:0.78rem; line-height:1.8; color:#1a5276;">
+      フェントスパッチ：0.5mg=12.5μg/h、1mg=25μg/h、2mg=50μg/h、4mg=100μg/h<br>
+      デュロテップMT：2.1mg=12.5μg/h、4.2mg=25μg/h、8.4mg=50μg/h、12.6mg=75μg/h
     </div>
   </div>
 
@@ -392,7 +397,8 @@
           <option value="morphine-supp">モルヒネ（坐薬）</option>
         </optgroup>
         <optgroup label="貼付剤">
-          <option value="fentanyl-patch">フェンタニル（貼付）</option>
+          <option value="fentanyl-patch-1d">フェンタニル（貼付・1日毎）</option>
+          <option value="fentanyl-patch-3d">フェンタニル（貼付・3日毎）</option>
         </optgroup>
         <optgroup label="注射剤">
           <option value="morphine-inj">モルヒネ（注射）</option>
@@ -439,6 +445,25 @@
 
       <div class="reduction-note" style="display:block; margin-top:10px;">
         ⚕️ <strong>症状コントロールができている場合：</strong>不完全交差耐性や生体利用率を考慮して20〜30%の減量を検討して下さい。特に<strong>内服から注射に変更する際</strong>には十分考慮して下さい。（文献3・303p）
+      </div>
+
+      <div class="inj-card" id="patch-section" style="display:none; background:#f0f9f5; border-color:#a9dfbf;">
+        <h3 style="color:#1e8449;">🩹 推奨パッチ製品</h3>
+        <table class="inj-table">
+          <tr>
+            <td class="td-label">換算値（放出速度）</td>
+            <td class="td-val" id="patch-rate">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">推奨パッチ</td>
+            <td class="td-val" id="patch-name">—</td>
+          </tr>
+          <tr>
+            <td class="td-label">貼付頻度</td>
+            <td class="td-val" id="patch-freq">—</td>
+          </tr>
+        </table>
+        <div style="font-size:0.76rem; color:var(--muted); margin-top:8px; line-height:1.6;" id="patch-note"></div>
       </div>
 
       <div class="inj-card" id="inj-section" style="display:none">
@@ -600,7 +625,12 @@ const DRUGS = {
   'tramadol-oral':      { label: 'トラマドール（経口）',      unit: 'mg/日',  toOME: v => v * (30/150),   fromOME: o => o * (150/30),   isInj: false },
   'tapentadol-oral':    { label: 'タペンタドール（経口）',    unit: 'mg/日',  toOME: v => v * 0.4,        fromOME: o => o / 0.4,        isInj: false },
   'morphine-supp':      { label: 'モルヒネ（坐薬）',          unit: 'mg/日',  toOME: v => v * (30/20),    fromOME: o => o * (20/30),    isInj: false },
-  'fentanyl-patch':     { label: 'フェンタニル（貼付）',      unit: 'μg/h',  toOME: v => v * (30/12.5),  fromOME: o => o * (12.5/30),  isInj: false },
+  'fentanyl-patch-1d':  { label: 'フェンタニル（貼付・1日毎）', unit: 'μg/h', toOME: v => v * (30/12.5),  fromOME: o => o * (12.5/30),  isInj: false, isPatch: true,
+    patchName: 'フェントスパッチ', freq: '1日毎（24時間）',
+    sizes: [{rate:12.5,mg:'0.5'},{rate:25,mg:'1'},{rate:50,mg:'2'},{rate:100,mg:'4'},{rate:150,mg:'6'},{rate:200,mg:'8'}] },
+  'fentanyl-patch-3d':  { label: 'フェンタニル（貼付・3日毎）', unit: 'μg/h', toOME: v => v * (30/12.5),  fromOME: o => o * (12.5/30),  isInj: false, isPatch: true,
+    patchName: 'デュロテップMTパッチ', freq: '3日毎（72時間）',
+    sizes: [{rate:12.5,mg:'2.1'},{rate:25,mg:'4.2'},{rate:50,mg:'8.4'},{rate:75,mg:'12.6'},{rate:100,mg:'16.8'}] },
   'morphine-inj':       { label: 'モルヒネ（注射）',          unit: 'mg/日',  toOME: v => v * (30/12.5),  fromOME: o => o / (30/12.5),  isInj: true,
     fromOMELow: o => o / 3, fromOMEHigh: o => o / 2,
     ampule: { mg: 10, vol: 1, label: '10mg/1mL', name: 'モルヒネ注射液' } },
@@ -615,6 +645,7 @@ const DRUGS = {
 function updateFromUnit() {
   const key = document.getElementById('from-drug').value;
   document.getElementById('from-unit-hint').textContent = DRUGS[key].unit;
+  document.getElementById('from-patch-hint').style.display = DRUGS[key].isPatch ? 'block' : 'none';
 }
 function updateToUnit() {
   const key = document.getElementById('to-drug').value;
@@ -675,6 +706,30 @@ function calculate() {
     `レスキュー量（1回・${toDrug.isInj ? '持続注射の早送り' : '頓用'}）`;
   document.getElementById('res-rescue').innerHTML =
     `${fmt(rescueDose)} <span class="unit">${toDrug.unit}</span>`;
+
+  // Patch section
+  const patchSection = document.getElementById('patch-section');
+  if (toDrug.isPatch) {
+    patchSection.style.display = 'block';
+    const rateCalc = equi; // μg/h
+    const match = toDrug.sizes.find(s => s.rate >= rateCalc);
+    if (match) {
+      document.getElementById('patch-rate').textContent = `${fmt(rateCalc, 1)} μg/h`;
+      document.getElementById('patch-name').textContent = `${toDrug.patchName} ${match.mg}mg（${match.rate} μg/h）`;
+      document.getElementById('patch-freq').textContent = toDrug.freq;
+      document.getElementById('patch-note').textContent =
+        `計算値 ${fmt(rateCalc,1)} μg/h → 切り上げて ${match.rate} μg/h のパッチを選択。` +
+        (rateCalc < match.rate ? `（${toDrug.sizes[0].rate} μg/h が最小サイズのため）` : '');
+    } else {
+      const last = toDrug.sizes[toDrug.sizes.length - 1];
+      document.getElementById('patch-rate').textContent = `${fmt(rateCalc, 1)} μg/h`;
+      document.getElementById('patch-name').textContent = `⚠️ 最大サイズ（${last.mg}mg・${last.rate} μg/h）を超過 — 複数枚併用を検討`;
+      document.getElementById('patch-freq').textContent = toDrug.freq;
+      document.getElementById('patch-note').textContent = '';
+    }
+  } else {
+    patchSection.style.display = 'none';
+  }
 
   const injSection = document.getElementById('inj-section');
   if (toDrug.isInj) {
