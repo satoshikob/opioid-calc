@@ -621,38 +621,84 @@
 
       <!-- Visual diagram -->
       <div style="margin-top:16px;">
-        <div style="font-size:0.76rem; color:var(--muted); margin-bottom:10px;">等価換算図（モルヒネ経口薬 30mg/日 を中心として）</div>
-        <div class="eq-diagram">
-          <!-- Row 1 -->
-          <div class="eq-box green"><span>オキシコドン<br>注射液</span><strong>15mg/日</strong></div>
-          <div class="eq-sym">≒</div>
-          <div class="eq-box blue"><span>モルヒネ<br>注射液</span><strong>15mg/日</strong></div>
-          <div class="eq-sym">≒</div>
-          <div class="eq-box red"><span>フェンタニル<br>注射液</span><strong>0.3mg/日</strong></div>
-          <!-- Row connectors -->
-          <div class="eq-sym-v">≒</div>
-          <div class="eq-sym-v">‖</div>
-          <div class="eq-sym-v">≒</div>
-          <!-- Row 2 -->
-          <div class="eq-box green"><span>オキシコドン<br>経口薬</span><strong>20mg/日</strong></div>
-          <div class="eq-sym">=</div>
-          <div class="eq-box center-box"><span>モルヒネ<br>経口薬</span><strong>30mg/日</strong></div>
-          <div class="eq-sym">=</div>
-          <div class="eq-box red"><span>フェントス®テープ<br><small>=ワンデュロ® 0.84mg<br>=デュロテップ®MT 2.1mg</small></span><strong>1mg/日</strong></div>
-          <!-- Row connectors -->
-          <div class="eq-sym-v">≒</div>
-          <div class="eq-sym-v">‖</div>
-          <div class="eq-sym-v">≒</div>
-          <!-- Row 3 -->
-          <div class="eq-box orange"><span>タペンタドール<br>経口薬</span><strong>100mg/日</strong></div>
-          <div class="eq-sym">≒</div>
-          <div class="eq-box purple"><span>トラマドール<br>経口薬</span><strong>150mg/日</strong></div>
-          <div class="eq-sym">≒</div>
-          <div class="eq-box red"><span>ヒドロモルフォン<br>経口薬 6mg/日<br>注射薬 1.2mg/日</span></div>
-        </div>
-        <div style="font-size:0.76rem; color:var(--muted); margin-top:10px; text-align:center;">
-          目安：低用量 = 0〜60mg/day　中等量 = 60〜120mg/day　高用量 = 120mg/day〜
-        </div>
+        <div style="font-size:0.76rem; color:var(--muted); margin-bottom:8px;">等価換算図（モルヒネ経口薬 30mg/日 を中心として）</div>
+        <svg viewBox="0 0 600 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;font-family:'Hiragino Sans','Meiryo',sans-serif;">
+          <!-- Box helper: col centers 90, 300, 510 / row centers 55, 210, 365 / box 160×90 -->
+
+          <!-- Row 1 boxes -->
+          <rect x="10" y="10" width="160" height="90" rx="8" fill="#27ae60"/>
+          <text x="90" y="38" text-anchor="middle" fill="white" font-size="13">オキシコドン</text>
+          <text x="90" y="56" text-anchor="middle" fill="white" font-size="13">注射液</text>
+          <text x="90" y="82" text-anchor="middle" fill="white" font-size="16" font-weight="bold">15mg/日</text>
+
+          <rect x="220" y="10" width="160" height="90" rx="8" fill="#2980b9"/>
+          <text x="300" y="38" text-anchor="middle" fill="white" font-size="13">モルヒネ</text>
+          <text x="300" y="56" text-anchor="middle" fill="white" font-size="13">注射液</text>
+          <text x="300" y="82" text-anchor="middle" fill="white" font-size="16" font-weight="bold">15mg/日</text>
+
+          <rect x="430" y="10" width="160" height="90" rx="8" fill="#c0392b"/>
+          <text x="510" y="38" text-anchor="middle" fill="white" font-size="13">フェンタニル</text>
+          <text x="510" y="56" text-anchor="middle" fill="white" font-size="13">注射液</text>
+          <text x="510" y="82" text-anchor="middle" fill="white" font-size="16" font-weight="bold">0.3mg/日</text>
+
+          <!-- Row 1 horizontal symbols -->
+          <text x="193" y="62" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+          <text x="407" y="62" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+
+          <!-- Vertical symbols between row1 and row2 -->
+          <text x="90"  y="135" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+          <text x="300" y="135" text-anchor="middle" fill="#555" font-size="20" font-weight="bold">‖</text>
+          <text x="510" y="135" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+
+          <!-- Row 2 boxes -->
+          <rect x="10" y="155" width="160" height="90" rx="8" fill="#27ae60"/>
+          <text x="90" y="183" text-anchor="middle" fill="white" font-size="13">オキシコドン</text>
+          <text x="90" y="201" text-anchor="middle" fill="white" font-size="13">経口薬</text>
+          <text x="90" y="227" text-anchor="middle" fill="white" font-size="16" font-weight="bold">20mg/日</text>
+
+          <rect x="220" y="155" width="160" height="90" rx="8" fill="white" stroke="#1a5276" stroke-width="3"/>
+          <text x="300" y="183" text-anchor="middle" fill="#1a5276" font-size="13">モルヒネ</text>
+          <text x="300" y="201" text-anchor="middle" fill="#1a5276" font-size="13">経口薬</text>
+          <text x="300" y="230" text-anchor="middle" fill="#1a5276" font-size="18" font-weight="bold">30mg/日</text>
+
+          <rect x="430" y="145" width="160" height="110" rx="8" fill="#c0392b"/>
+          <text x="510" y="170" text-anchor="middle" fill="white" font-size="12">フェントス®テープ</text>
+          <text x="510" y="188" text-anchor="middle" fill="white" font-size="11">= ワンデュロ® 0.84mg</text>
+          <text x="510" y="204" text-anchor="middle" fill="white" font-size="11">= デュロテップ®MT 2.1mg</text>
+          <text x="510" y="236" text-anchor="middle" fill="white" font-size="16" font-weight="bold">1mg/日</text>
+
+          <!-- Row 2 horizontal symbols -->
+          <text x="193" y="208" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">=</text>
+          <text x="407" y="208" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">=</text>
+
+          <!-- Vertical symbols between row2 and row3 -->
+          <text x="90"  y="285" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+          <text x="300" y="285" text-anchor="middle" fill="#555" font-size="20" font-weight="bold">‖</text>
+          <text x="510" y="285" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+
+          <!-- Row 3 boxes -->
+          <rect x="10" y="305" width="160" height="90" rx="8" fill="#d35400"/>
+          <text x="90" y="333" text-anchor="middle" fill="white" font-size="13">タペンタドール</text>
+          <text x="90" y="351" text-anchor="middle" fill="white" font-size="13">経口薬</text>
+          <text x="90" y="377" text-anchor="middle" fill="white" font-size="16" font-weight="bold">100mg/日</text>
+
+          <rect x="220" y="305" width="160" height="90" rx="8" fill="#7d3c98"/>
+          <text x="300" y="333" text-anchor="middle" fill="white" font-size="13">トラマドール</text>
+          <text x="300" y="351" text-anchor="middle" fill="white" font-size="13">経口薬</text>
+          <text x="300" y="377" text-anchor="middle" fill="white" font-size="16" font-weight="bold">150mg/日</text>
+
+          <rect x="430" y="305" width="160" height="90" rx="8" fill="#c0392b"/>
+          <text x="510" y="330" text-anchor="middle" fill="white" font-size="12">ヒドロモルフォン</text>
+          <text x="510" y="348" text-anchor="middle" fill="white" font-size="12">経口薬 6mg/日</text>
+          <text x="510" y="366" text-anchor="middle" fill="white" font-size="12">注射薬 1.2mg/日</text>
+
+          <!-- Row 3 horizontal symbols -->
+          <text x="193" y="358" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+          <text x="407" y="358" text-anchor="middle" fill="#555" font-size="18" font-weight="bold">≒</text>
+
+          <!-- Bottom note -->
+          <text x="300" y="418" text-anchor="middle" fill="#7f8c8d" font-size="11">目安：低用量 0〜60mg/day　中等量 60〜120mg/day　高用量 120mg/day〜</text>
+        </svg>
       </div>
     </div>
   </div>
